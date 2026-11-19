@@ -69,13 +69,15 @@ class TestBitemporalAndManifestInvariants(unittest.TestCase):
         self.assertAlmostEqual(mats.X_pit[0, 4], 160.0)
 
     def test_corrupted_row_pct_is_bounded_between_0_and_100(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=44, entity_count=20, prediction_count=100))
+        cfg = StreamConfig(seed=44, entity_count=20, prediction_count=100)
+        corpus = generate_stream_corpus(cfg)
         mats = extract_batch_and_pit_features(corpus.events, corpus.predictions)
         self.assertGreaterEqual(mats.corrupted_row_pct, 0.0)
         self.assertLessEqual(mats.corrupted_row_pct, 100.0)
 
     def test_risk_alert_leak_rows_never_exceed_total_corrupted_rows(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=44, entity_count=20, prediction_count=100))
+        cfg = StreamConfig(seed=44, entity_count=20, prediction_count=100)
+        corpus = generate_stream_corpus(cfg)
         mats = extract_batch_and_pit_features(corpus.events, corpus.predictions)
         self.assertLessEqual(mats.risk_alert_leak_rows, mats.corrupted_row_count)
 
@@ -128,7 +130,9 @@ class TestBitemporalAndManifestInvariants(unittest.TestCase):
             StreamConfig(seed=20260619, entity_count=40, prediction_count=300, p95_lag_minutes=5.0)
         )
         c_long = generate_stream_corpus(
-            StreamConfig(seed=20260619, entity_count=40, prediction_count=300, p95_lag_minutes=360.0)
+            StreamConfig(
+                seed=20260619, entity_count=40, prediction_count=300, p95_lag_minutes=360.0
+            )
         )
         m_short = extract_batch_and_pit_features(c_short.events, c_short.predictions)
         m_long = extract_batch_and_pit_features(c_long.events, c_long.predictions)
@@ -177,20 +181,25 @@ class TestBitemporalAndManifestInvariants(unittest.TestCase):
         self.assertEqual({e.partition for e in corpus.events}, {0, 1, 2, 3})
 
     def test_corpus_event_ids_and_prediction_ids_are_unique(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=20260619, entity_count=30, prediction_count=90))
+        cfg = StreamConfig(seed=20260619, entity_count=30, prediction_count=90)
+        corpus = generate_stream_corpus(cfg)
         self.assertEqual(len({e.event_id for e in corpus.events}), len(corpus.events))
-        self.assertEqual(len({p.prediction_id for p in corpus.predictions}), len(corpus.predictions))
+        pred_ids = {p.prediction_id for p in corpus.predictions}
+        self.assertEqual(len(pred_ids), len(corpus.predictions))
 
     def test_corpus_labels_are_strictly_binary_0_or_1(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=20260619, entity_count=30, prediction_count=150))
+        cfg = StreamConfig(seed=20260619, entity_count=30, prediction_count=150)
+        corpus = generate_stream_corpus(cfg)
         self.assertEqual({p.label for p in corpus.predictions}, {0, 1})
 
     def test_corpus_amounts_are_strictly_positive(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=20260619, entity_count=20, prediction_count=80))
+        cfg = StreamConfig(seed=20260619, entity_count=20, prediction_count=80)
+        corpus = generate_stream_corpus(cfg)
         self.assertTrue(all(e.amount > 0.0 for e in corpus.events))
 
     def test_watermark_replay_preserves_ingestion_order_of_accepted_events(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=20260619, entity_count=20, prediction_count=80))
+        cfg = StreamConfig(seed=20260619, entity_count=20, prediction_count=80)
+        corpus = generate_stream_corpus(cfg)
         wm = apply_spark_watermark(corpus.events, watermark_minutes=30.0)
         ing_ts = [e.ingestion_ts_min for e in wm.accepted_events]
         self.assertEqual(ing_ts, sorted(ing_ts))
@@ -202,13 +211,15 @@ class TestBitemporalAndManifestInvariants(unittest.TestCase):
         self.assertEqual(wm.dropped_late_share_pct, 0.0)
 
     def test_manifest_min_event_ts_is_less_or_equal_to_max_ingestion_ts(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=20260619, entity_count=20, prediction_count=80))
+        cfg = StreamConfig(seed=20260619, entity_count=20, prediction_count=80)
+        corpus = generate_stream_corpus(cfg)
         m = build_cloud_manifest(corpus.events, "s3://prod-events")
         for entry in m.entries:
             self.assertLessEqual(entry.min_event_ts, entry.max_ingestion_ts)
 
     def test_pit_honest_model_predictions_are_bounded_probabilities(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=20260619, entity_count=40, prediction_count=200))
+        cfg = StreamConfig(seed=20260619, entity_count=40, prediction_count=200)
+        corpus = generate_stream_corpus(cfg)
         mats = extract_batch_and_pit_features(corpus.events, corpus.predictions)
         m = LogisticRiskModel().fit(mats.X_pit[:120], mats.labels[:120])
         probs = m.predict_proba(mats.X_pit[120:])

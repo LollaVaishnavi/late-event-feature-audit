@@ -65,7 +65,7 @@ GROUP BY p.prediction_id, p.label
 ORDER BY p.prediction_id;
 """
 
-# Strict point-in-time query: enforces BOTH event_ts <= prediction_ts AND ingestion_ts <= prediction_ts
+# Strict point-in-time query: enforces BOTH event_ts and ingestion_ts <= prediction_ts
 PIT_FEATURE_SQL = """
 SELECT
     p.prediction_id,

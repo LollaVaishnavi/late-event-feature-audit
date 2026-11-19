@@ -60,7 +60,7 @@ def _sample_payloads() -> tuple[dict, dict, dict, dict]:
 
 
 class TestCLIAndReport(unittest.TestCase):
-    def test_cli_audit_returns_exit_2_on_point_in_time_leakage_and_0_when_late_rate_zero(self) -> None:
+    def test_cli_audit_returns_exit_2_on_leakage_and_0_when_late_rate_zero(self) -> None:
         buf = io.StringIO()
         with redirect_stdout(buf):
             code_leak = main(["audit", "--json"])

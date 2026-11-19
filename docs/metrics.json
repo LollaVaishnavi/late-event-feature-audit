@@ -1,0 +1,48 @@
+{
+  "metrics": {
+    "tests_total": 74,
+    "coverage_floor_pct": 90,
+    "coverage_measured_pct": 99.2,
+    "event_count": 4800,
+    "corrupted_row_pct": 7.4,
+    "auc_inflation_points": 4.7,
+    "heavy_tail_auc_inflation": 8.4,
+    "wm_15m_dropped_late_pct": 59.4,
+    "cloud_providers_verified": 3
+  },
+  "anchors": {
+    "tests_total": [
+      "{} tests"
+    ],
+    "coverage_floor_pct": [
+      "{}%+ line coverage"
+    ],
+    "event_count": [
+      "{} streaming events"
+    ],
+    "corrupted_row_pct": [
+      "{}% of training rows"
+    ],
+    "auc_inflation_points": [
+      "{} AUC points"
+    ],
+    "heavy_tail_auc_inflation": [
+      "{} points at 12h"
+    ],
+    "wm_15m_dropped_late_pct": [
+      "{}% of late events dropped"
+    ],
+    "cloud_providers_verified": [
+      "{} cloud providers"
+    ]
+  },
+  "checked_documents": [
+    "README.md",
+    "docs/adr/ADR-001-sqlite-and-manifests-over-live-kafka-and-cloud-buckets.md",
+    "docs/adr/ADR-002-bitemporal-ingestion-time-join-over-batch-snapshot.md",
+    "docs/adr/ADR-003-watermark-cutoff-completeness-vs-freshness-tradeoff.md",
+    "docs/adr/ADR-004-multicloud-uri-manifest-contract-s3-gcs-azure.md",
+    "docs/adr/ADR-005-offline-replay-boundary-and-unmeasured-broker-effects.md"
+  ],
+  "note": "Every value here is produced by running the test suite and the four experiments."
+}

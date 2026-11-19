@@ -82,7 +82,7 @@ class TestBitemporalSQLiteFeatures(unittest.TestCase):
         np.testing.assert_array_equal(mats.X_batch[0], np.zeros(5))
         np.testing.assert_array_equal(mats.X_pit[0], np.zeros(5))
 
-    def test_future_events_with_event_ts_after_prediction_ts_are_excluded_by_both_queries(self) -> None:
+    def test_future_events_after_prediction_ts_are_excluded_by_both_queries(self) -> None:
         ev_future = StreamEvent("E1", "A1", 0, 0, 200.0, 201.0, "gateway_risk_alert", 500.0, 1)
         pred = PredictionPoint("P1", "A1", 150.0, 1)
         mats = extract_batch_and_pit_features([ev_future], [pred])
@@ -90,7 +90,8 @@ class TestBitemporalSQLiteFeatures(unittest.TestCase):
         np.testing.assert_array_equal(mats.X_pit[0], np.zeros(5))
 
     def test_pit_features_are_always_elementwise_less_or_equal_to_batch_features(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=20260619, entity_count=25, prediction_count=100))
+        cfg = StreamConfig(seed=20260619, entity_count=25, prediction_count=100)
+        corpus = generate_stream_corpus(cfg)
         mats = extract_batch_and_pit_features(corpus.events, corpus.predictions)
         self.assertTrue(np.all(mats.X_pit <= mats.X_batch + 1e-9))
 

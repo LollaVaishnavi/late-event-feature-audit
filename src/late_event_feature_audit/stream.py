@@ -148,7 +148,11 @@ def generate_stream_corpus(config: StreamConfig | None = None) -> StreamCorpus:
         eid = entity_ids[int(rng.integers(0, cfg.entity_count))]
         ev_ts = float(rng.uniform(0.0, horizon_min - 360.0))
         is_late = rng.random() < cfg.late_event_rate
-        lag = float(rng.lognormal(mean=mu, sigma=sigma)) if is_late else float(rng.uniform(0.1, 2.0))
+        lag = (
+            float(rng.lognormal(mean=mu, sigma=sigma))
+            if is_late
+            else float(rng.uniform(0.1, 2.0))
+        )
         is_risk = 1 if rng.random() < 0.04 else 0
         raw_events.append(
             {
@@ -198,7 +202,7 @@ def apply_spark_watermark(
     events: tuple[StreamEvent, ...] | list[StreamEvent],
     watermark_minutes: float,
 ) -> WatermarkReplayResult:
-    """Replay Kafka events in ingestion order and evict events older than max_event_ts - watermark."""
+    """Replay Kafka events in ingestion order and evict events past watermark."""
     if watermark_minutes < 0.0:
         raise ValueError(f"watermark_minutes must be non-negative, got {watermark_minutes}")
 

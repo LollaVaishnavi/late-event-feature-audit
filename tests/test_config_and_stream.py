@@ -85,7 +85,8 @@ class TestStreamReplayAndWatermarks(unittest.TestCase):
         self.assertLessEqual(corpus.p95_lag_minutes, corpus.p99_lag_minutes)
 
     def test_wider_spark_watermark_drops_fewer_or_equal_events(self) -> None:
-        corpus = generate_stream_corpus(StreamConfig(seed=20260619, entity_count=30, prediction_count=120))
+        cfg = StreamConfig(seed=20260619, entity_count=30, prediction_count=120)
+        corpus = generate_stream_corpus(cfg)
         wm5 = apply_spark_watermark(corpus.events, watermark_minutes=5.0)
         wm30 = apply_spark_watermark(corpus.events, watermark_minutes=30.0)
         wm240 = apply_spark_watermark(corpus.events, watermark_minutes=240.0)

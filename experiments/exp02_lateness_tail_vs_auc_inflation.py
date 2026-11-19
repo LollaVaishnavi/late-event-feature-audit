@@ -60,7 +60,11 @@ def run() -> dict:
 if __name__ == "__main__":
     d = run()
     print("=== Experiment 02: Arrival Lag Tail vs Phantom Offline AUC Inflation ===")
-    print(f"{'Regime':<16} {'p95 Lag':>9} {'Corrupted':>10} {'Batch AUC':>10} {'Online AUC':>11} {'Inflation':>10}")
+    hdr = (
+        f"{'Regime':<16} {'p95 Lag':>9} {'Corrupted':>10} "
+        f"{'Batch AUC':>10} {'Online AUC':>11} {'Inflation':>10}"
+    )
+    print(hdr)
     for r in d["lag_regimes"]:
         print(
             f"{r['regime']:<16} {r['p95_lag_minutes']:>7.0f}m {r['corrupted_row_pct']:>9.1f}% "
