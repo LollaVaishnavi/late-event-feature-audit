@@ -106,6 +106,12 @@ def extract_batch_and_pit_features(
     """Load events into in-memory SQLite and extract both batch and point-in-time features."""
     if not predictions:
         raise ValueError("predictions must not be empty")
+    for ev in events:
+        if ev.ingestion_ts_min < ev.event_ts_min:
+            raise ValueError(
+                f"Event {ev.event_id} has ingestion_ts ({ev.ingestion_ts_min}) < "
+                f"event_ts ({ev.event_ts_min})"
+            )
 
     conn = sqlite3.connect(":memory:")
     try:
