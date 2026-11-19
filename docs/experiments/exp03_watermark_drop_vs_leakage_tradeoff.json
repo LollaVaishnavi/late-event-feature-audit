@@ -1,0 +1,35 @@
+{
+  "experiment": "exp03_watermark_drop_vs_leakage_tradeoff",
+  "wm_15m_dropped_late_pct": 59.4,
+  "wm_15m_dropped_count": 804,
+  "watermarks": [
+    {
+      "watermark_minutes": 5.0,
+      "dropped_events_count": 1113,
+      "late_events_total": 1353,
+      "dropped_late_share_pct": 82.3,
+      "online_auc": 0.7408
+    },
+    {
+      "watermark_minutes": 15.0,
+      "dropped_events_count": 804,
+      "late_events_total": 1353,
+      "dropped_late_share_pct": 59.4,
+      "online_auc": 0.758
+    },
+    {
+      "watermark_minutes": 60.0,
+      "dropped_events_count": 222,
+      "late_events_total": 1353,
+      "dropped_late_share_pct": 16.4,
+      "online_auc": 0.7632
+    },
+    {
+      "watermark_minutes": 360.0,
+      "dropped_events_count": 4,
+      "late_events_total": 1353,
+      "dropped_late_share_pct": 0.3,
+      "online_auc": 0.7609
+    }
+  ]
+}

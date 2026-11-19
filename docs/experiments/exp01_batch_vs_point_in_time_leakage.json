@@ -1,0 +1,16 @@
+{
+  "experiment": "exp01_batch_vs_point_in_time_leakage",
+  "event_count": 4800,
+  "prediction_count": 1200,
+  "p50_lag_minutes": 1.45,
+  "p95_lag_minutes": 61.93,
+  "p99_lag_minutes": 164.3,
+  "batch_offline_auc": 0.8076,
+  "batch_model_on_online_auc": 0.7609,
+  "pit_honest_auc": 0.7609,
+  "auc_inflation_points": 4.7,
+  "corrupted_row_count": 89,
+  "corrupted_row_pct": 7.4,
+  "risk_alert_leak_rows": 69,
+  "gate_passed": false
+}

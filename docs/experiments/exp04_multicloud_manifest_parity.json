@@ -1,0 +1,35 @@
+{
+  "experiment": "exp04_multicloud_manifest_parity",
+  "cloud_providers_verified": 3,
+  "reference_sha256": "17aa35aa3de9406e8ba591f507fe9788fb6993013f9f26a5e90c4f20e1027096",
+  "all_parity_match": true,
+  "providers": [
+    {
+      "provider": "aws_s3",
+      "scheme": "s3://",
+      "bucket_root": "s3://ecommerce-events-prod",
+      "partitions": 4,
+      "total_events": 4800,
+      "manifest_sha256": "17aa35aa3de9406e8ba591f507fe9788fb6993013f9f26a5e90c4f20e1027096",
+      "feature_parity": true
+    },
+    {
+      "provider": "gcp_gcs",
+      "scheme": "gs://",
+      "bucket_root": "gs://ecommerce-events-prod",
+      "partitions": 4,
+      "total_events": 4800,
+      "manifest_sha256": "17aa35aa3de9406e8ba591f507fe9788fb6993013f9f26a5e90c4f20e1027096",
+      "feature_parity": true
+    },
+    {
+      "provider": "azure_blob",
+      "scheme": "az://",
+      "bucket_root": "az://ecommerce-events-prod",
+      "partitions": 4,
+      "total_events": 4800,
+      "manifest_sha256": "17aa35aa3de9406e8ba591f507fe9788fb6993013f9f26a5e90c4f20e1027096",
+      "feature_parity": true
+    }
+  ]
+}

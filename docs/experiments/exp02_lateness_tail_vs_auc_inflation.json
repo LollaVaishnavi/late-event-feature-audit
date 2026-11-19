@@ -1,0 +1,43 @@
+{
+  "experiment": "exp02_lateness_tail_vs_auc_inflation",
+  "heavy_tail_auc_inflation": 8.4,
+  "heavy_tail_corrupted_pct": 23.4,
+  "lag_regimes": [
+    {
+      "regime": "5m_tight",
+      "p95_lag_minutes": 5.0,
+      "corrupted_row_count": 2,
+      "corrupted_row_pct": 0.2,
+      "batch_offline_auc": 0.8076,
+      "batch_model_on_online_auc": 0.8076,
+      "auc_inflation_points": 0.0
+    },
+    {
+      "regime": "30m_moderate",
+      "p95_lag_minutes": 30.0,
+      "corrupted_row_count": 17,
+      "corrupted_row_pct": 1.4,
+      "batch_offline_auc": 0.8076,
+      "batch_model_on_online_auc": 0.8034,
+      "auc_inflation_points": 0.4
+    },
+    {
+      "regime": "2h_default",
+      "p95_lag_minutes": 120.0,
+      "corrupted_row_count": 89,
+      "corrupted_row_pct": 7.4,
+      "batch_offline_auc": 0.8076,
+      "batch_model_on_online_auc": 0.7609,
+      "auc_inflation_points": 4.7
+    },
+    {
+      "regime": "12h_heavy_tail",
+      "p95_lag_minutes": 720.0,
+      "corrupted_row_count": 281,
+      "corrupted_row_pct": 23.4,
+      "batch_offline_auc": 0.8076,
+      "batch_model_on_online_auc": 0.7239,
+      "auc_inflation_points": 8.4
+    }
+  ]
+}
