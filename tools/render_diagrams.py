@@ -1,0 +1,90 @@
+"""Render the late-event-feature-audit architecture diagram to a self-contained SVG."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+SVG_PATH = ROOT / "docs" / "evidence" / "architecture.svg"
+MANIFEST_PATH = ROOT / "docs" / "evidence" / "diagram_manifest.json"
+
+SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" width="940" height="330" viewBox="0 0 940 330">
+  <rect x="0" y="0" width="940" height="330" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+  <text x="470" y="34" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#0f172a">late-event-feature-audit: Bitemporal Streaming Replay Architecture</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" />
+    </marker>
+  </defs>
+
+  <rect x="28" y="68" width="184" height="106" rx="8" fill="#ffffff" stroke="#1d4ed8" stroke-width="2" />
+  <text x="120" y="95" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#1e3a8a">1. Kafka Event Stream</text>
+  <text x="120" y="116" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">4800 Events, 4 Partitions</text>
+  <text x="120" y="134" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">event_ts + ingestion_ts</text>
+  <text x="120" y="152" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">(stream.py)</text>
+
+  <line x1="212" y1="121" x2="254" y2="121" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  <rect x="258" y="68" width="204" height="106" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2" />
+  <text x="360" y="95" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#115e59">2. Bitemporal SQLite</text>
+  <text x="360" y="116" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">Batch: event_ts &lt;= pred_ts</text>
+  <text x="360" y="134" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">PIT: + ingestion_ts &lt;= pred_ts</text>
+  <text x="360" y="152" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">(features.py)</text>
+
+  <line x1="462" y1="121" x2="504" y2="121" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  <rect x="508" y="68" width="196" height="106" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2" />
+  <text x="606" y="95" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#5b21b6">3. Leakage Audit</text>
+  <text x="606" y="116" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">L2 Logistic Risk Model</text>
+  <text x="606" y="134" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">Batch vs Online ROC-AUC</text>
+  <text x="606" y="152" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">(model.py)</text>
+
+  <line x1="704" y1="121" x2="742" y2="121" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  <rect x="746" y="68" width="166" height="106" rx="8" fill="#fef2f2" stroke="#991b1b" stroke-width="2" />
+  <text x="829" y="95" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#991b1b">4. CI Leakage Gate</text>
+  <text x="829" y="116" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">Exit 0: PIT Parity</text>
+  <text x="829" y="134" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#991b1b">Exit 2: Leakage Breach</text>
+  <text x="829" y="152" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">(cli.py)</text>
+
+  <line x1="120" y1="174" x2="120" y2="216" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+  <line x1="829" y1="174" x2="829" y2="216" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  <rect x="28" y="220" width="434" height="84" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="2" />
+  <text x="245" y="246" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#92400e">5. Multi-Cloud Manifests (S3, GCS, Azure Blob)</text>
+  <text x="245" y="266" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">s3://, gs://, az://, abfss:// -> Canonical SHA-256 Parity</text>
+  <text x="245" y="284" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">(manifests.py) + Spark Watermark Eviction Simulator</text>
+
+  <rect x="490" y="220" width="422" height="84" rx="8" fill="#f0fdf4" stroke="#166534" stroke-width="2" />
+  <text x="701" y="246" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#166534">6. Machine Receipts and Offline Boundary (ADR-005)</text>
+  <text x="701" y="266" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#334155">metrics.json + check_numbers.py (zero network, zero cloud creds)</text>
+  <text x="701" y="284" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">Cannot measure live Kafka rebalances or Spark executor OOMs</text>
+</svg>
+"""
+
+
+def main() -> int:
+    SVG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    SVG_PATH.write_text(SVG_CONTENT.strip() + "\n", encoding="utf-8")
+    MANIFEST_PATH.write_text(
+        json.dumps(
+            {
+                "svg": str(SVG_PATH.relative_to(ROOT)),
+                "width": 940,
+                "height": 330,
+                "background": "#f8fafc",
+                "html_labels": False,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(f"render_diagrams: wrote {SVG_PATH}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

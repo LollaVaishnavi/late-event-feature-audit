@@ -1,0 +1,35 @@
+{
+  "note": "Real captured stdout and wall time for each demo segment.",
+  "segments": [
+    {
+      "title": "1. Audit batch snapshot vs point-in-time serving (exit 2 = leakage)",
+      "command": "python3 -m late_event_feature_audit.cli audit",
+      "exit_code": 2,
+      "duration_sec": 0.356
+    },
+    {
+      "title": "2. Arrival lag tail sweep (5m to 12h p95 lag)",
+      "command": "python3 experiments/exp02_lateness_tail_vs_auc_inflation.py",
+      "exit_code": 0,
+      "duration_sec": 0.633
+    },
+    {
+      "title": "3. Spark Streaming 15m watermark eviction trade-off",
+      "command": "python3 -m late_event_feature_audit.cli watermark --watermark 15",
+      "exit_code": 0,
+      "duration_sec": 0.311
+    },
+    {
+      "title": "4. Multi-cloud manifest parity (AWS S3, GCP GCS, Azure Blob)",
+      "command": "python3 experiments/exp04_multicloud_manifest_parity.py",
+      "exit_code": 0,
+      "duration_sec": 0.179
+    },
+    {
+      "title": "5. Machine-checked receipts verification",
+      "command": "python3 tools/check_numbers.py",
+      "exit_code": 0,
+      "duration_sec": 0.027
+    }
+  ]
+}
